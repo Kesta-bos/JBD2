@@ -91,12 +91,11 @@ def re_encode_for_nerd_font(font: fontforge.font) -> None:
     """Nerd Font의 특정 글리프 매핑 문제를 수정합니다(예: 하트 아이콘)."""
     try:
         if "heart" in font:
-            font.selection.select(0xF08D0)
-            font.copy()
-            font.selection.select(0x2665)
-            font.paste()
-            font.selection.select(0xF08D0)
-            font.clear()
+            src = font[0xF08D0]
+            dst = font.createChar(0x2665)
+            dst.foreground = src.foreground.copy()
+            dst.width = src.width
+            src.clear()
             print("[INFO] 'heart' 글리프 매핑을 수정했습니다.")
     except Exception as e:
         print(f"[WARNING] 'heart' 글리프 매핑을 수정할 수 없습니다: {e}")
